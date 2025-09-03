@@ -6,7 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
 /**
- * DTO de Playlist.
+ * DTO para representar una lista de reproducción.
+ * Utiliza un registro de Java para una definición concisa e inmutable.
+ * @param nombre El nombre de la lista de reproducción. No puede estar en blanco.
+ * @param descripcion Una breve descripción de la lista de reproducción.
+ * @param canciones Un conjunto de DTOs de canciones asociadas a la lista.
  */
 @Schema(description = "Lista de reproducción")
 public record PlaylistDto(

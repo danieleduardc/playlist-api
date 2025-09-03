@@ -6,9 +6,17 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuración de OpenAPI para la documentación de la API.
+ * Define la información general de la API, como el título, la descripción y la versión.
+ */
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * Crea y configura el bean OpenAPI para la generación de la documentación de la API.
+     * @return El objeto OpenAPI configurado.
+     */
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()

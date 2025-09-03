@@ -4,7 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * DTO in/out para Song.
+ * DTO para representar una canción.
+ * Utiliza un registro de Java para una definición concisa e inmutable.
+ * @param titulo El título de la canción. No puede estar en blanco.
+ * @param artista El artista de la canción. No puede estar en blanco.
+ * @param album El álbum al que pertenece la canción.
+ * @param anno El año de lanzamiento de la canción.
+ * @param genero El género musical de la canción.
  */
 @Schema(description = "Canción")
 public record SongDto(

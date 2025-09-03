@@ -9,13 +9,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Mapper manual entre entidades y DTOs.
- * (Se podría usar MapStruct en un proyecto real)
+ * Clase de utilidad para mapear entre entidades de dominio y objetos de transferencia de datos (DTOs).
+ * Esta clase no está pensada para ser instanciada.
  */
 public final class PlaylistMapper {
 
+    /**
+     * Constructor privado para evitar la instanciación de la clase de utilidad.
+     */
     private PlaylistMapper() {}
 
+    /**
+     * Convierte una entidad {@link Playlist} a un {@link PlaylistDto}.
+     * @param entity La entidad a convertir.
+     * @return El DTO resultante.
+     */
     public static PlaylistDto toDto(Playlist entity) {
         Set<SongDto> canciones = entity.getSongs().stream()
                 .map(s -> new SongDto(s.getTitulo(), s.getArtista(), s.getAlbum(), s.getAnno(), s.getGenero()))
@@ -23,6 +31,11 @@ public final class PlaylistMapper {
         return new PlaylistDto(entity.getName(), entity.getDescription(), canciones);
     }
 
+    /**
+     * Convierte un {@link PlaylistDto} a una entidad {@link Playlist}.
+     * @param dto El DTO a convertir.
+     * @return La entidad resultante.
+     */
     public static Playlist toEntity(PlaylistDto dto) {
         Playlist p = new Playlist(dto.nombre(), dto.descripcion());
         if (dto.canciones() != null) {
@@ -31,6 +44,11 @@ public final class PlaylistMapper {
         return p;
     }
 
+    /**
+     * Actualiza una entidad {@link Playlist} existente con datos de un {@link PlaylistDto}.
+     * @param target La entidad de destino a actualizar.
+     * @param dto El DTO con los nuevos datos.
+     */
     public static void updateEntity(Playlist target, PlaylistDto dto) {
         if (dto.descripcion() != null) target.setDescription(dto.descripcion());
         if (dto.canciones() != null) {

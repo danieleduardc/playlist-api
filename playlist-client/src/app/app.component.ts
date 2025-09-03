@@ -16,15 +16,15 @@ import { CommonModule } from '@angular/common';
 
       <main>
         <div class="tabs">
-          <button 
-            [class.active]="activeTab === 'list'" 
+          <button
+            [class.active]="activeTab === 'list'"
             (click)="activeTab = 'list'"
             class="tab-button"
           >
             📋 Ver Listas
           </button>
-          <button 
-            [class.active]="activeTab === 'create'" 
+          <button
+            [class.active]="activeTab === 'create'"
             (click)="activeTab = 'create'"
             class="tab-button"
           >
@@ -51,7 +51,7 @@ import { CommonModule } from '@angular/common';
   styles: [`
     .app-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #566a77 0%, #376673 100%);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 

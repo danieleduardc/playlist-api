@@ -14,10 +14,23 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
 
+/**
+ * Configuración de seguridad para la aplicación.
+ * Define la cadena de filtros de seguridad, el servicio de detalles de usuario y el codificador de contraseñas.
+ */
 @Configuration
 public class SecurityConfig {
 
-
+    /**
+     * Configura la cadena de filtros de seguridad HTTP.
+     * - Deshabilita CSRF.
+     * - Configura CORS para permitir solicitudes desde http://localhost:4200.
+     * - Define las reglas de autorización para los puntos finales.
+     * - Habilita la autenticación básica HTTP.
+     * @param http El objeto HttpSecurity para configurar.
+     * @return La cadena de filtros de seguridad construida.
+     * @throws Exception si ocurre un error durante la configuración.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -40,6 +53,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Crea un servicio de detalles de usuario en memoria con dos usuarios: 'user' y 'admin'.
+     * @param encoder El codificador de contraseñas para codificar las contraseñas de los usuarios.
+     * @return Un UserDetailsService con los usuarios predefinidos.
+     */
     @Bean
     public UserDetailsService uds(PasswordEncoder encoder) {
         var user = User.withUsername("user").password(encoder.encode("user123")).roles("USER").build();
@@ -47,6 +65,10 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user, admin);
     }
 
+    /**
+     * Proporciona un bean de codificador de contraseñas que utiliza BCrypt.
+     * @return Un PasswordEncoder que utiliza el algoritmo BCrypt.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
