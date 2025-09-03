@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "d9f0eb24-5876-4448-b539-db03c1e447ce",
+		"name": "Playlist API Collection",
+		"description": "Colección para probar la Playlist API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17959922"
+	},
+	"item": [
+		{
+			"name": "Create List",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic dXNlcjp1c2VyMTIz",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Lista 1\", \r\n    \"descripcion\": \"Lista de canciones\", \r\n    \"canciones\": \r\n    [\r\n        {\r\n        \"titulo\": \"Hace mucho tiempo\", \r\n        \"artista\": \"Arcangel\", \r\n        \"album\": \"Sentimiento, Elegancia y Maldad\", \r\n        \"anno\": \"2013\", \r\n        \"genero\": \"reggaeton\"\r\n        }\r\n    ]\r\n    \r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/lists",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Lists",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic dXNlcjp1c2VyMTIz",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/lists",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get List by Name",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic dXNlcjp1c2VyMTIz",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/lists/Lista 1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lists",
+						"Lista 1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete List by Name",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46YWRtaW4xMjM=",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/lists/Lista 1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lists",
+						"Lista 1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
