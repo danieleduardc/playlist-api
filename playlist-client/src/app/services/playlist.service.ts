@@ -20,12 +20,12 @@ export interface Playlist {
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {
   private baseUrl = 'http://localhost:8080';
-  private userAuthHeader = new HttpHeaders({ 
+  private userAuthHeader = new HttpHeaders({
     'Authorization': 'Basic ' + btoa('user:user123'),
     'Content-Type': 'application/json'
   });
 
-  private adminAuthHeader = new HttpHeaders({ 
+  private adminAuthHeader = new HttpHeaders({
     'Authorization': 'Basic ' + btoa('admin:admin123'),
     'Content-Type': 'application/json'
   });

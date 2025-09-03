@@ -1,9 +1,17 @@
-# Playlist API (Spring Boot + JPA + H2 + Security)
+# Playlist App - Sistema Full Stack
+### (Spring Boot + JPA + H2 + Security + Angular)
 
-## 🚀 Cómo ejecutar
+## 🚀 Cómo ejecutar backend + frontend
 
 ```bash
+cd playlist-api
 mvn spring-boot:run
+```
+
+```bash
+cd playlist-client
+npm install
+ng serve
 ```
 
 ## 🔑 Credenciales por defecto
@@ -12,6 +20,7 @@ mvn spring-boot:run
 - **admin / admin123** → ROLE_ADMIN → además puede **eliminar** playlists.
 
 ## 📂 Estructura del proyecto
+**Backend**
 
 ```plaintext
 playlist-api/
@@ -32,14 +41,35 @@ playlist-api/
 └── pom.xml                      # Dependencias y configuración del proyecto
 ```
 
-## 📌 Endpoints principales
+**Frontend**
+```plaintext
+playlist-frontend/
+├── src/
+│   ├── app/
+│   │   ├── components/          # Componentes Angular
+│   │   ├── services/           # Servicios HTTP y lógica
+│   │   ├── models/             # Interfaces y tipos
+│   │   └── auth/               # Autenticación y guards
+│   ├── assets/                 # Recursos estáticos
+│   └── environments/           # Configuración por entorno
+├── package.json                # Dependencias npm
+└── angular.json                # Configuración Angular
+```
+## 📌 Endpoints API REST
 
 - `POST /lists` → **201 Created** , Location(valida nombre null → **400 Bad Request**)
 - `GET /lists` → **200 OK**
 - `GET /lists/{listName}` → **200 OK** o **404 Not Found**
 - `DELETE /lists/{listName}` → **204 No Content** o **404 Not Found** (solo ADMIN)
 
-## 📖 Documentación y herramientas
+## 🌐 URLs de acceso
 
-- **Swagger/OpenAPI** → [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-- **H2 Console** → [http://localhost:8080/h2-console](http://localhost:8080/h2-console)  
+**Backend**
+
+- API → http://localhost:8080
+- Swagger/OpenAPI → http://localhost:8080/swagger-ui/index.html
+- H2 Console → http://localhost:8080/h2-console
+
+**Frontend**
+
+- Aplicación Angular → http://localhost:4200
