@@ -3,10 +3,13 @@ import { PlaylistService, Playlist } from '../services/playlist.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlaylistDetailComponent } from './playlist-detail.component';
+import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-playlist-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, PlaylistDetailComponent],
   template: `
     <div class="playlist-list-container">
@@ -14,8 +17,10 @@ import { PlaylistDetailComponent } from './playlist-detail.component';
 
       <div class="controls">
         <div class="actions">
-          <button (click)="load()" class="reload-btn">🔄 Recargar</button>
-          <span class="count">{{ filteredPlaylists.length }} de {{ playlists.length }} lista(s)</span>
+          <button (click)="load()" class="reload-btn" [disabled]="loading">
+            {{ loading ? '⏳ Cargando...' : '🔄 Recargar' }}
+          </button>
+          <span class="count">{{ filteredPlaylists.length || 0 }} de {{ playlists.length || 0 }} lista(s)</span>
         </div>
 
         <div class="filters">
@@ -77,7 +82,7 @@ import { PlaylistDetailComponent } from './playlist-detail.component';
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let p of paginatedPlaylists; let i = index"
+              <tr *ngFor="let p of paginatedPlaylists; let i = index; trackBy: trackByName"
                   class="table-row"
                   [class.expanded]="expandedPlaylist === p.nombre">
                 <td class="name-cell">
@@ -249,6 +254,15 @@ import { PlaylistDetailComponent } from './playlist-detail.component';
     .empty-state {
       max-width: 300px;
       margin: 0 auto;
+    }
+
+    .spinner-inline {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid #fff; border-top-color: transparent;
+      border-radius: 50%;
+      vertical-align: -2px;
+      animation: spin .8s linear infinite;
     }
 
     .empty-icon {
@@ -558,7 +572,9 @@ export class PlaylistListComponent implements OnInit {
   pageSize = 10;
   totalPages = 1;
 
-  constructor(private api: PlaylistService) {}
+  constructor(private api: PlaylistService, private cdr: ChangeDetectorRef) {}
+
+  trackByName = (_: number, p: Playlist) => p.nombre;
 
   ngOnInit() {
     this.load();
@@ -568,32 +584,40 @@ export class PlaylistListComponent implements OnInit {
     this.loading = true;
     this.clearMessage();
 
-    this.api.findAll().subscribe({
-      next: (data) => {
-        this.playlists = data;
-        this.applyFiltersAndPagination();
+    this.api.findAll()
+      .pipe(finalize(() => {
         this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
-        this.showMessage(`Error al cargar listas: ${error.message}`, 'error');
-      }
-    });
+        this.cdr.markForCheck(); // 👈 OnPush
+      }))
+      .subscribe({
+        next: (data) => {
+          this.playlists = data;
+          this.applyFiltersAndPagination();
+        },
+        error: (error) => {
+          this.showMessage(`Error al cargar listas: ${error.message}`, 'error');
+        }
+      });
   }
 
   remove(name: string) {
-    if (confirm(`¿Estás seguro de que quieres eliminar la lista "${name}"?`)) {
-      this.api.deleteByName(name).subscribe({
-        next: () => {
-          this.showMessage(`Lista "${name}" eliminada exitosamente`, 'success');
-          this.load();
-          this.expandedPlaylist = null;
-        },
-        error: (error) => {
-          this.showMessage(`Error al eliminar lista: ${error.message}`, 'error');
-        }
-      });
-    }
+    if (!confirm(`¿Estás seguro de que quieres eliminar la lista "${name}"?`)) return;
+
+    const prev = this.playlists;
+    this.playlists = this.playlists.filter(p => p.nombre !== name);
+    this.applyFiltersAndPagination();
+    this.expandedPlaylist = this.expandedPlaylist === name ? null : this.expandedPlaylist;
+    this.cdr.markForCheck();
+
+    this.api.deleteByName(name).subscribe({
+      next: () => this.showMessage(`Lista "${name}" eliminada exitosamente`, 'success'),
+      error: (error) => {
+        this.playlists = prev;
+        this.applyFiltersAndPagination();
+        this.showMessage(`Error al eliminar lista: ${error.message}`, 'error');
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   toggleTableDetail(playlistName: string) {
