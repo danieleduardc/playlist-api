@@ -10,18 +10,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var c = new CorsConfiguration();
+                    c.setAllowedOrigins(List.of("http://localhost:4200"));
+                    c.setAllowedMethods(List.of("GET","POST","DELETE"));
+                    c.setAllowedHeaders(List.of("Authorization","Content-Type"));
+                    c.setAllowCredentials(true);
+                    return c;
+                }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/lists/**").authenticated()
+                        .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/lists/**").hasRole("ADMIN")
+                        .requestMatchers("/lists/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
